@@ -1,0 +1,12 @@
+{
+    "name": "mrrouone/debugmodels",
+    "description": "",
+    "type": "library",
+    "license": "MIT",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "MrRouOne\\DebugModels\\": "src"
+        }
+    }
+}
