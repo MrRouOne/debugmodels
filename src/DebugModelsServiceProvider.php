@@ -1,6 +1,6 @@
 <?php /** @noinspection PhpMissingFieldTypeInspection */
 
-namespace MrRouOne\DebugModels;
+namespace App\Providers;
 
 use Egal\Model\ModelManager;
 use Illuminate\Support\ServiceProvider;
@@ -8,22 +8,34 @@ use Illuminate\Support\ServiceProvider;
 class DebugModelsServiceProvider extends ServiceProvider
 {
     public array $class;
+    public bool $debugMode;
+    public string $root;
 
     public function __construct($app)
     {
         parent::__construct($app);
-        config(['app.debug_model_root' => 'app/DebugModels/']);
-        config(['app.debug_model_include' => true]);
-        $this->scanModels(config('app.debug_model_root', 'app/DebugModels/'));
+        $this->setRoot();
+        $this->setDebugModel();
+        $this->scanModels($this->root);
+    }
+
+    protected function setRoot()
+    {
+        $this->root = config('debug')['root'];
+    }
+
+    protected function setDebugModel()
+    {
+        $this->debugMode = config('debug')['include'];
     }
 
     protected function scanModels(?string $dir = null): void
     {
-        $baseDir = base_path(config('app.debug_model_root', 'app/DebugModels/'));
+        $baseDir = base_path($this->root);
 
         $dir === null ?: $dir = $baseDir;
 
-        $modelsNamespace = str_replace('/', '\\', config('app.debug_model_root', 'app/DebugModels/'));
+        $modelsNamespace = str_replace('/', '\\', $this->root);
         $modelsNamespace[0] = strtoupper($modelsNamespace[0]);
 
         foreach (scandir($dir) as $dirItem) {
@@ -61,7 +73,7 @@ class DebugModelsServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        if (!config('app.debug_model_include', false)) {
+        if (!$this->debugMode) {
             return;
         }
 
