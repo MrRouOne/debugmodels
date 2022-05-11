@@ -1,6 +1,6 @@
 <?php /** @noinspection PhpMissingFieldTypeInspection */
 
-namespace App\Providers;
+namespace MrRouOne\DebugModels;
 
 use Egal\Model\ModelManager;
 use Illuminate\Support\ServiceProvider;
